@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-  config.vm.define "default" do |w|
+  config.vm.define "w10x64" do |w|
     w.vm.box = "iznav/w10x64"
     w.vm.hostname = "w10x64"
     w.vm.communicator = "winrm"
@@ -17,5 +17,8 @@ Vagrant.configure(2) do |config|
       vb.customize ["setextradata", "global", "GUI/MaxGuestResolution", "any"]
       vb.customize ["setextradata", :id, "CustomVideoMode1", "1024x768x32"]
     end
+
+    w.vm.provision "shell", path: "scripts/chocolatey.cmd"
+    w.vm.provision "shell", path: "scripts/packages.cmd"
   end
 end
