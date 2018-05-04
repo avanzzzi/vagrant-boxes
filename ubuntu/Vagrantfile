@@ -1,124 +1,23 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-locale = "pt_BR.UTF-8"
-timezone = "America/Sao_Paulo"
-k_keymap = "br"
-k_variant = "abnt2"
-k_model = "pc105"
-
-base_arch = <<-SCRIPT
-#!/bin/bash
-
-# update package database
-pacman -Syu --noconfirm --needed
-
-# install x essentials
-pacman -R --noconfirm virtualbox-guest-utils-nox
-pacman -Sy --noconfirm --needed \
- xorg \
- xorg-drivers \
- xorg-xinit \
- git \
- sudo \
- virtualbox-guest-utils
-SCRIPT
-
-base_ubuntu = <<-SCRIPT
-#!/bin/bash
-
-# update package database
-DEBIAN_FRONTEND=noninteractive apt-get update -qy
-
-# install x essentials
-DEBIAN_FRONTEND=noninteractive apt-get install -qy \
- xserver-xorg \
- xinit \
- console-data \
- virtualbox-guest-x11 \
- virtualbox-guest-utils \
- virtualbox-guest-dkms
-SCRIPT
-
-set_timezone = <<-SCRIPT
-#!/bin/bash
-
-# set timezone
-echo ">>> Setting timezone to #{timezone}"
-ln -sf /usr/share/zoneinfo/#{timezone} /etc/localtime
-SCRIPT
-
-set_locale = <<-SCRIPT
-#!/bin/bash
-
-# update locale
-echo "#{locale} #{locale.split('.').last}" >> /etc/locale.gen
-echo ">>> Generating the following locales"
-grep -E "^[^#]" /etc/locale.gen
-locale-gen
-localectl set-locale "LANG=#{locale}"
-SCRIPT
-
-set_keymap = <<-SCRIPT
-#!/bin/bash
-
-echo ">>> Setting console and x keymaps to #{k_keymap}-#{k_variant}"
-localectl set-keymap #{k_keymap}-#{k_variant}
-localectl set-x11-keymap #{k_keymap} #{k_model} #{k_variant}
-SCRIPT
-
 Vagrant.configure(2) do |config|
-  config.vm.define "arch" do |arch|
-    arch.vm.box = "archlinux/archlinux"
-    arch.vm.hostname = "arch-dotfiles-test"
-    arch.vm.provider "virtualbox" do |vb|
-      vb.name = "arch-dotfiles-test"
-      vb.gui = false
-      vb.memory = 1024
-      vb.cpus = 2
-    end
-    arch.vm.provision "shell", inline: base_arch
-  end
   config.vm.define "ubuntu" do |ubuntu|
     ubuntu.vm.box = "bento/ubuntu-18.04"
-    ubuntu.vm.hostname = "ubuntu-dotfiles-test"
+    ubuntu.vm.hostname = "ubuntu"
+
     ubuntu.vm.provider "virtualbox" do |vb|
-      vb.name = "ubuntu-dotfiles-test"
+      vb.name = "ubuntu"
       vb.gui = false
       vb.memory = 1024
       vb.cpus = 2
     end
-    ubuntu.vm.provision "shell", inline: base_ubuntu
+
+    ubuntu.vm.provision "shell", path: "sh/update.sh"
+    ubuntu.vm.provision "shell", path: "sh/virtualbox.sh"
+    ubuntu.vm.provision "shell", path: "sh/x.sh"
+    ubuntu.vm.provision "shell", path: "../common/timezone.sh"
+    ubuntu.vm.provision "shell", path: "../common/locale.sh"
+    ubuntu.vm.provision "shell", path: "../common/keymap.sh"
   end
-  config.vm.provision "shell", inline: set_timezone
-  config.vm.provision "shell", inline: set_locale
-  config.vm.provision "shell", inline: set_keymap
-  config.vm.provision "file", source: 'ctl.sh', destination: "$HOME/.dt/ctl.sh"
-  config.vm.provision "file", source: 'alsaequal.bin', destination: "$HOME/.dt/alsaequal.bin"
-  config.vm.provision "file", source: 'asoundrc', destination: "$HOME/.dt/asounrc"
-  config.vm.provision "file", source: 'backgrounds', destination: "$HOME/.dt/backgrounds"
-  config.vm.provision "file", source: 'bashrc', destination: "$HOME/.dt/bashrc"
-  config.vm.provision "file", source: 'bin', destination: "$HOME/.dt/bin"
-  config.vm.provision "file", source: 'conkyrc', destination: "$HOME/.dt/conkyrc"
-  config.vm.provision "file", source: 'dunstrc', destination: "$HOME/.dt/dunstrc"
-  config.vm.provision "file", source: 'fluxbox', destination: "$HOME/.dt/fluxbox"
-  config.vm.provision "file", source: 'fonts', destination: "$HOME/.dt/fonts"
-  config.vm.provision "file", source: 'gtk-3.0', destination: "$HOME/.dt/gtk-3.0"
-  config.vm.provision "file", source: 'gtkrc-2.0', destination: "$HOME/.dt/gtkrc-2.0"
-  config.vm.provision "file", source: 'include', destination: "$HOME/.dt/include"
-  config.vm.provision "file", source: 'mopidy', destination: "$HOME/.dt/mopidy"
-  config.vm.provision "file", source: 'mpd', destination: "$HOME/.dt/mpd"
-  config.vm.provision "file", source: 'ncmpcpp', destination: "$HOME/.dt/ncmpcpp"
-  config.vm.provision "file", source: 'pulse', destination: "$HOME/.dt/pulse"
-  config.vm.provision "file", source: 'tmux.conf', destination: "$HOME/.dt/tmux.conf"
-  config.vm.provision "file", source: 'Trolltech.conf', destination: "$HOME/.dt/Trolltech.conf"
-  config.vm.provision "file", source: 'urxvt', destination: "$HOME/.dt/urxvt"
-  config.vm.provision "file", source: 'vim', destination: "$HOME/.dt/vim"
-  config.vm.provision "file", source: 'volumeicon', destination: "$HOME/.dt/volumeicon"
-  config.vm.provision "file", source: 'xinitrc', destination: "$HOME/.dt/xinitrc"
-  config.vm.provision "file", source: 'Xresources', destination: "$HOME/.dt/Xresources"
-  config.vm.provision "file", source: 'Xresources.d', destination: "$HOME/.dt/Xresources.d"
-  config.vm.provision "file", source: 'zuki-themes', destination: "$HOME/.dt/zuki-themes"
-  config.vm.provision "shell", inline: 'cd $HOME/.dt; ./ctl.sh -y install', privileged: false
-  config.vm.provision "shell", inline: 'cd $HOME/.dt; ./ctl.sh -y symlink', privileged: false
 end
