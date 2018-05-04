@@ -15,7 +15,9 @@ Vagrant.configure(2) do |config|
 
     arch.vm.provision "shell", path: "sh/update.sh"
     arch.vm.provision "shell", path: "sh/virtualbox.sh"
-    arch.vm.provision "shell", path: "sh/x.sh"
+
+    #arch.vm.provision "shell", path: "sh/x.sh"
+
     arch.vm.provision "shell", path: "../common/timezone.sh"
     arch.vm.provision "shell", path: "../common/locale.sh"
     arch.vm.provision "shell", path: "../common/keymap.sh"

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# install x essentials
+# install console essentials
 DEBIAN_FRONTEND=noninteractive apt-get install -qy --no-install-recommends \
- xserver-xorg \
- xinit \
- virtualbox-guest-x11
+ console-data

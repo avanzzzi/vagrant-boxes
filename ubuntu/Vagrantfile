@@ -14,8 +14,12 @@ Vagrant.configure(2) do |config|
     end
 
     ubuntu.vm.provision "shell", path: "sh/update.sh"
+    ubuntu.vm.provision "shell", path: "sh/console.sh"
     ubuntu.vm.provision "shell", path: "sh/virtualbox.sh"
-    ubuntu.vm.provision "shell", path: "sh/x.sh"
+
+    #ubuntu.vm.provision "shell", path: "sh/x.sh"
+    #ubuntu.vm.provision "shell", path: "sh/gnome.sh"
+
     ubuntu.vm.provision "shell", path: "../common/timezone.sh"
     ubuntu.vm.provision "shell", path: "../common/locale.sh"
     ubuntu.vm.provision "shell", path: "../common/keymap.sh"
