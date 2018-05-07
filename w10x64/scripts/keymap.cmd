@@ -1,1 +1,2 @@
-control intl.cpl,, /f:"c:\tmp\add_kbd_layout.xml"
+control intl.cpl,, /f:"%TEMP%\add_kbd_layout.xml"
+exit 0
