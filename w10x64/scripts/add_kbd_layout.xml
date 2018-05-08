@@ -3,6 +3,6 @@
     <gs:User UserID="Current" CopySettingsToSystemAcct="true"/>
 </gs:UserList> 
 <gs:InputPreferences> 
-    <gs:InputLanguageID Action="add" ID="0416:00000416" Default="true"/>
+    <gs:InputLanguageID Action="add" ID="0416:00000416" Default="true"/> <!-- pt_BR -->
 </gs:InputPreferences>
 </gs:GlobalizationServices>

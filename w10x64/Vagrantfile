@@ -23,5 +23,7 @@ Vagrant.configure(2) do |config|
     w.vm.provision "shell", path: "scripts/pip_packages.cmd"
     w.vm.provision "shell", path: "scripts/timezone.cmd"
     w.vm.provision "shell", path: "scripts/keymap.cmd"
+    w.vm.provision "shell", path: "scripts/disable_ipv6.cmd"
+    # w.vm.provision "shell", path: "scripts/change_dns.cmd"
   end
 end
