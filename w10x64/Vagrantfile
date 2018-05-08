@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
       vb.customize ["modifyvm", :id, "--vram", "256"]
     end
 
-    w.vm.provision "file", source: "scripts/add_kbd_layout.xml", destination: "$Env:TEMP\\add_kbd_layout.xml"
+    w.vm.provision "file", source: "scripts/add_kbd_layout.xml", destination: "${Env:TEMP}\\add_kbd_layout.xml"
 
     w.vm.provision "shell", path: "scripts/chocolatey.cmd"
     w.vm.provision "shell", path: "scripts/choco_packages.cmd"
