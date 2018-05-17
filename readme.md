@@ -6,7 +6,7 @@ Pre-requisites:
 
 To build windows box:
 ```
-vagrant plugin install winrm winrm-fs
+vagrant plugin install winrm winrm-fs winrm-elevated
 ```
 
 Run:
