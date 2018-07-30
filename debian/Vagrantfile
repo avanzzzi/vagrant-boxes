@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.define "debian" do |debian|
+    debian.vm.box = "bento/debian-9.5"
+    debian.vm.hostname = "debian"
+
+    debian.vm.provider "virtualbox" do |vb|
+      vb.name = "debian"
+      vb.gui = true
+      vb.memory = 1024
+      vb.cpus = 2
+    end
+
+    debian.vm.provision "shell", path: "sh/update.sh"
+    debian.vm.provision "shell", path: "sh/console.sh"
+
+    #debian.vm.provision "shell", path: "sh/x.sh"
+    #debian.vm.provision "shell", path: "sh/gnome.sh"
+
+    debian.vm.provision "shell", path: "../common/timezone.sh"
+    debian.vm.provision "shell", path: "../common/locale.sh"
+    debian.vm.provision "shell", path: "../common/keymap.sh"
+  end
+end
