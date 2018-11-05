@@ -7,5 +7,5 @@ enc="UTF-8"
 echo "$locale $enc" >> /etc/locale.gen
 echo ">>> Generating the following locales"
 grep -E "^[^#]" /etc/locale.gen
-locale-gen
+which locale-gen &>/dev/null && locale-gen
 localectl set-locale "LANG=$locale"
