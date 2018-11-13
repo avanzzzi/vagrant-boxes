@@ -14,6 +14,11 @@ Vagrant.configure(2) do |config|
       vb.cpus = 2
     end
 
+    fedora.vm.provider "libvirt" do |lv|
+      lv.memory = 1024
+      lv.cpus = 2
+    end
+
     fedora.vm.provision "shell", path: "sh/update.sh"
 
     #fedora.vm.provision "shell", path: "sh/x.sh"
